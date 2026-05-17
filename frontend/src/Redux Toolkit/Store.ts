@@ -1,69 +1,137 @@
+// src/Redux Toolkit/Store.ts
+
 import {
   configureStore,
   combineReducers,
 } from "@reduxjs/toolkit";
-import { useDispatch, useSelector, type TypedUseSelectorHook } from "react-redux";
 
-// Customer slices
-import sellerSlice from "./Seller/sellerSlice";
-import sellerAuthenticationSlice from "./Seller/sellerAuthenticationSlice";
-import sellerProductSlice from "./Seller/sellerProductSlice";
-import ProductSlice from "./Customer/ProductSlice";
-import CartSlice from "./Customer/CartSlice";
-import AuthSlice from "./Customer/AuthSlice";
+import {
+  useDispatch,
+  useSelector,
+  type TypedUseSelectorHook,
+} from "react-redux";
+
+// ================= CUSTOMER SLICES =================
+
+import authReducer from "./Customer/AuthSlice";
+
 import UserSlice from "./Customer/UserSlice";
+
+import ProductSlice from "./Customer/ProductSlice";
+
+import CartSlice from "./Customer/CartSlice";
+
 import OrderSlice from "./Customer/OrderSlice";
-import sellerOrderSlice from "./Seller/sellerOrderSlice";
-import payoutSlice from "./Seller/payoutSlice";
-import transactionSlice from "./Seller/transactionSlice";
+
 import CouponSlice from "./Customer/CouponSlice";
-import AdminCouponSlice from "./Admin/AdminCouponSlice";
+
 import ReviewSlice from "./Customer/ReviewSlice";
+
 import WishlistSlice from "./Customer/WishlistSlice";
+
 import AiChatBotSlice from "./Customer/AiChatBotSlice";
-import revenueChartSlice from "./Seller/revenueChartSlice";
+
 import CustomerSlice from "./Customer/Customer/CustomerSlice";
+
+// ================= SELLER SLICES =================
+
+import sellerSlice from "./Seller/sellerSlice";
+
+import sellerAuthenticationSlice from "./Seller/sellerAuthenticationSlice";
+
+import sellerProductSlice from "./Seller/sellerProductSlice";
+
+import sellerOrderSlice from "./Seller/sellerOrderSlice";
+
+import payoutSlice from "./Seller/payoutSlice";
+
+import transactionSlice from "./Seller/transactionSlice";
+
+import revenueChartSlice from "./Seller/revenueChartSlice";
+
+// ================= ADMIN SLICES =================
+
+import AdminCouponSlice from "./Admin/AdminCouponSlice";
+
 import DealSlice from "./Admin/DealSlice";
+
 import AdminSlice from "./Admin/AdminSlice";
 
+// ================= ROOT REDUCER =================
+
 const rootReducer = combineReducers({
-  // customer
-  auth: AuthSlice,
+
+  // CUSTOMER
+
+  auth: authReducer,
+
   user: UserSlice,
+
   products: ProductSlice,
+
   cart: CartSlice,
+
   orders: OrderSlice,
+
   coupone: CouponSlice,
+
   review: ReviewSlice,
+
   wishlist: WishlistSlice,
+
   aiChatBot: AiChatBotSlice,
+
   homePage: CustomerSlice,
 
-  // seller
+  // SELLER
+
   sellers: sellerSlice,
+
   sellerAuth: sellerAuthenticationSlice,
+
   sellerProduct: sellerProductSlice,
+
   sellerOrder: sellerOrderSlice,
+
   payouts: payoutSlice,
+
   transaction: transactionSlice,
+
   revenueChart: revenueChartSlice,
 
-  // admin
+  // ADMIN
+
   adminCoupon: AdminCouponSlice,
+
   adminDeals: DealSlice,
+
   admin: AdminSlice,
-  deal:DealSlice
+
+  deal: DealSlice,
 });
+
+// ================= STORE =================
 
 const store = configureStore({
+
   reducer: rootReducer,
-  // No need to define middleware unless you're adding custom ones
+
 });
 
+// ================= TYPES =================
+
 export type AppDispatch = typeof store.dispatch;
+
 export type RootState = ReturnType<typeof rootReducer>;
 
-export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+// ================= CUSTOM HOOKS =================
+
+export const useAppDispatch = () =>
+  useDispatch<AppDispatch>();
+
+export const useAppSelector: TypedUseSelectorHook<RootState> =
+  useSelector;
+
+// ================= EXPORT STORE =================
 
 export default store;

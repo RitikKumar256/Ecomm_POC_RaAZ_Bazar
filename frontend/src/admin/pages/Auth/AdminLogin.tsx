@@ -1,148 +1,183 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {  Button, CircularProgress, TextField } from '@mui/material'
-import { useEffect, useState } from 'react'
-import {  useFormik } from 'formik';
-import { useAppDispatch, useAppSelector } from '../../../Redux Toolkit/Store';
-import { useNavigate } from 'react-router-dom';
-import { sendLoginSignupOtp, signin } from '../../../Redux Toolkit/Customer/AuthSlice';
-import OTPInput from '../../../customer/components/OtpFild/OTPInput';
+import React, { useState } from "react";
 
-const AdminLoginForm = () => {
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Paper,
+} from "@mui/material";
 
-    const navigate = useNavigate();
-    const [otp, setOtp] = useState("");
-    const [isOtpSent, setIsOtpSent] = useState(false)
-    const [timer, setTimer] = useState<number>(30); // Timer state
-    const [isTimerActive, setIsTimerActive] = useState<boolean>(false);
-    const dispatch = useAppDispatch();
-    const { auth } = useAppSelector(store => store)
+import { useNavigate } from "react-router-dom";
 
-    const formik = useFormik({
-        initialValues: {
-            email: '',
-            otp: ''
-        },
+import axios from "axios";
 
-        onSubmit: (values: any) => {
-            // Handle form submission
-            dispatch(signin({ email: values.email, otp, navigate }))
-            console.log('Form data:', values);
+const AdminLogin = () => {
+
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+
+  const [otp, setOtp] = useState("");
+
+  const [otpSent, setOtpSent] = useState(false);
+
+  // ================= SEND OTP =================
+
+  const sendOtp = async () => {
+
+    try {
+
+      await axios.post(
+        "http://localhost:5454/auth/sent/login-signup-otp",
+        {
+          email,
         }
-    });
+      );
 
-    const handleOtpChange = (otp: any) => {
+      alert("OTP Sent Successfully");
 
-        setOtp(otp);
+      setOtpSent(true);
 
-    };
+    } catch (error) {
 
-    const handleResendOTP = () => {
-        // Implement OTP resend logic
-        dispatch(sendLoginSignupOtp({ email: "signing_"+formik.values.email }))
-        console.log('Resend OTP');
-        setTimer(30);
-        setIsTimerActive(true);
-    };
+      console.log(error);
 
-    const handleSentOtp = () => {
-        setIsOtpSent(true);
-        handleResendOTP();
+      alert("Failed to send OTP");
+
     }
+  };
 
-    const handleLogin = () => {
-        formik.handleSubmit()
-    }
+  // ================= VERIFY OTP =================
 
-  
+  const verifyOtp = async () => {
 
-    useEffect(() => {
-        let interval: any;
+    try {
 
-        if (isTimerActive) {
-            interval = setInterval(() => {
-                setTimer(prev => {
-                    if (prev === 1) {
-                        clearInterval(interval);
-                        setIsTimerActive(false);
-                        return 30; // Reset timer for next OTP request
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
+      const response = await axios.post(
+        "http://localhost:5454/auth/signin",
+        {
+          email,
+          otp,
         }
+      );
 
-        return () => {
-            if (interval) clearInterval(interval);
-        };
-    }, [isTimerActive]);
+      console.log("admin login success", response.data);
 
+      // SAVE JWT
+      localStorage.setItem("admin_jwt", response.data.jwt);
 
+      // SAVE ROLE
+      localStorage.setItem("role", response.data.role);
 
-    return (
-        <div>
-            <h1 className='text-center font-bold text-xl text-primary-color pb-8'>Login</h1>
-            <form className="space-y-5">
+      // CHECK ADMIN
+      if (response.data.role === "ROLE_ADMIN") {
 
-                <TextField
-                    fullWidth
-                    name="email"
-                    label="Enter Your Email"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.email && Boolean(formik.errors.email)}
-                    helperText={formik.touched.email ? formik.errors.email as string : undefined}
-                />
+        navigate("/admin");
 
-                {auth.otpSent && <div className="space-y-2">
-                    <p className="font-medium text-sm">
-                        * Enter OTP sent to your mobile number
-                    </p>
-                    <OTPInput
-                        length={6}
-                        onChange={handleOtpChange}
-                        error={false}
-                    />
-                    <p className="text-xs space-x-2">
-                        {isTimerActive ? (
-                            <span>Resend OTP in {timer} seconds</span>
-                        ) : (
-                            <>
-                                Didn't receive OTP?{" "}
-                                <span
-                                    onClick={handleResendOTP}
-                                    className="text-teal-600 cursor-pointer hover:text-teal-800 font-semibold"
-                                >
-                                    Resend OTP
-                                </span>
-                            </>
-                        )}
-                    </p>
-                    {formik.touched.otp && formik.errors.otp && <p>{formik.errors.otp as string}</p>}
-                </div>}
+      } else {
 
-                {auth.otpSent && <div>
-                    <Button disabled={auth.loading} onClick={handleLogin}
-                        fullWidth variant='contained' sx={{ py: "11px" }}>{
-                            auth.loading ? <CircularProgress  />: "Login"}</Button>
-                </div>}
+        alert("You are not admin");
 
-                {!auth.otpSent && <Button
-                disabled={auth.loading}
-                    fullWidth
-                    variant='contained'
-                    onClick={handleSentOtp}
-                    sx={{ py: "11px" }}>{
-                        auth.loading ? <CircularProgress  />: "sent otp"}</Button>
-                }
+      }
 
+    } catch (error) {
 
+      console.log(error);
 
-            </form>
+      alert("Invalid OTP");
 
-         
-        </div>
-    )
-}
+    }
+  };
 
-export default AdminLoginForm
+  return (
+
+    <Box
+      className="flex justify-center items-center"
+      sx={{
+        minHeight: "100vh",
+        backgroundColor: "#f5f5f5",
+      }}
+    >
+
+      <Paper
+        elevation={3}
+        sx={{
+          padding: 4,
+          width: 400,
+          borderRadius: 3,
+        }}
+      >
+
+        <Typography
+          variant="h4"
+          textAlign="center"
+          mb={4}
+          fontWeight="bold"
+        >
+          Admin OTP Login
+        </Typography>
+
+        {/* EMAIL */}
+
+        <TextField
+          fullWidth
+          label="Admin Email"
+          type="email"
+          margin="normal"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        {/* OTP FIELD */}
+
+        {otpSent && (
+
+          <TextField
+            fullWidth
+            label="Enter OTP"
+            margin="normal"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+          />
+        )}
+
+        {/* BUTTONS */}
+
+        {!otpSent ? (
+
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{
+              mt: 3,
+              py: 1.5,
+            }}
+            onClick={sendOtp}
+          >
+            Send OTP
+          </Button>
+
+        ) : (
+
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{
+              mt: 3,
+              py: 1.5,
+            }}
+            onClick={verifyOtp}
+          >
+            Verify OTP
+          </Button>
+
+        )}
+
+      </Paper>
+
+    </Box>
+  );
+};
+
+export default AdminLogin;
