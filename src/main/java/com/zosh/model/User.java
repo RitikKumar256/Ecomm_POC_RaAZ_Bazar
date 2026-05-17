@@ -6,6 +6,7 @@ import com.zosh.domain.USER_ROLE;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,5 +42,5 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "coupon_id")
     )
     private Set<Coupon> usedCoupons=new HashSet<>();
-
+    private LocalDateTime lastSeen;
 }

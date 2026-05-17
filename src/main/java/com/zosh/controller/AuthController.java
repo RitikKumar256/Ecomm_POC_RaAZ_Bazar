@@ -8,6 +8,7 @@ import com.zosh.model.*;
 import com.zosh.repository.VerificationCodeRepository;
 import com.zosh.request.ResetPasswordRequest;
 import com.zosh.request.SignupRequest;
+import com.zosh.service.ActiveUserService;
 import com.zosh.service.AuthService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ import jakarta.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
-
+    private final ActiveUserService activeUserService;
 
     @PostMapping("/sent/login-signup-otp")
     public ResponseEntity<ApiResponse> sentLoginOtp(
@@ -65,9 +66,14 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequest loginRequest) throws SellerException {
+    public ResponseEntity<AuthResponse> signin(
+            @RequestBody LoginRequest loginRequest
+    ) throws SellerException {
 
         AuthResponse authResponse = authService.signin(loginRequest);
+
+        activeUserService.login(loginRequest.getEmail());
+
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 

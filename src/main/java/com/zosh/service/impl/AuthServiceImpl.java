@@ -16,6 +16,7 @@ import com.zosh.request.ResetPasswordRequest;
 import com.zosh.request.SignupRequest;
 import com.zosh.response.ApiResponse;
 import com.zosh.response.AuthResponse;
+import com.zosh.service.ActiveUserService;
 import com.zosh.service.AuthService;
 import com.zosh.service.EmailService;
 import com.zosh.service.UserService;
@@ -50,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtProvider jwtProvider;
     private final CustomeUserServiceImplementation customUserDetails;
     private final CartRepository cartRepository;
-
+    private final ActiveUserService activeUserService;
 
     @Override
     public void sentLoginOtp(String email) throws UserException, MessagingException {
@@ -154,6 +155,7 @@ public class AuthServiceImpl implements AuthService {
 
 
         authResponse.setRole(USER_ROLE.valueOf(roleName));
+        activeUserService.login(username);
 
         return authResponse;
 
