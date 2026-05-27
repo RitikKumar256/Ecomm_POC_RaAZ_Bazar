@@ -7,21 +7,55 @@ import {
   Modal,
   Snackbar,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import TextField from "@mui/material/TextField";
+import { useAppDispatch } from "../../../Redux Toolkit/Store";
+import { updateUserProfile } from "../../../Redux Toolkit/Customer/UserSlice";
 import EditIcon from "@mui/icons-material/Edit";
 import ProfileFildCard from "../../../seller/pages/Account/ProfileFildCard";
 import { useAppSelector } from "../../../Redux Toolkit/Store";
 import { style } from "../../../seller/pages/Account/Profile";
 
 const UserDetails = () => {
+    const dispatch = useAppDispatch();
   const { user } = useAppSelector((store) => store);
-  // const [open, setOpen] = useState(false);
-  // const handleClose = () => setOpen(false);
+const [open, setOpen] = useState(false);
 
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
+const [fullName, setFullName] = useState(
+  user.user?.fullName || ""
+);
 
+const [mobile, setMobile] = useState(
+  user.user?.mobile || ""
+);
+
+const handleClose = () => setOpen(false);
+
+
+
+const handleOpen = () => {
+  setOpen(true);
+};
+
+const handleUpdateProfile = () => {
+  if (mobile.length !== 10) {
+    alert("Mobile number must be 10 digits");
+    return;}
+  const jwt =
+    localStorage.getItem("customer_jwt") || "";
+
+  dispatch<any>(
+    updateUserProfile({
+      jwt,
+      userData: {
+        fullName,
+        mobile,
+      },
+    })
+  );
+
+  setOpen(false);
+};
   return (
     <div className="flex justify-center py-10">
       <div className="w-full lg:w-[70%]  ">
@@ -29,7 +63,7 @@ const UserDetails = () => {
           <h1 className="text-2xl font-bold text-gray-600 ">
             Persional Details
           </h1>
-          {/* <div>
+           <div>
             <Button
               onClick={handleOpen}
               size="small"
@@ -39,7 +73,7 @@ const UserDetails = () => {
             >
               <EditIcon />
             </Button>
-          </div> */}
+          </div>
         </div>
         <div className="space-y-5">
           {/* <Avatar
@@ -55,14 +89,55 @@ const UserDetails = () => {
           </div>
         </div>
       </div>
-      {/* <Modal
+       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>Update UserProfile</Box>
-      </Modal> */}
+        <Box sx={style}>
+          <div className="space-y-5">
+
+            <h1 className="text-xl font-bold">
+              Update Profile
+            </h1>
+
+            <TextField
+              fullWidth
+              label="Full Name"
+              value={fullName}
+              onChange={(e) =>
+                setFullName(e.target.value)
+              }
+            />
+
+          <TextField
+            fullWidth
+            label="Mobile Number"
+            value={mobile}
+            onChange={(e) => {
+
+              const value = e.target.value;
+
+
+              if (/^\d{0,10}$/.test(value)) {
+                setMobile(value);
+              }
+
+            }}
+          />
+
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={handleUpdateProfile}
+            >
+              Save Changes
+            </Button>
+
+          </div>
+        </Box>
+      </Modal>
     
     </div>
   );

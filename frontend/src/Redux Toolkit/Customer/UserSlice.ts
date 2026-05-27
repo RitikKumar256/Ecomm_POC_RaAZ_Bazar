@@ -72,7 +72,43 @@ export const fetchUserProfile = createAsyncThunk<
     }
   }
 );
+export const updateUserProfile = createAsyncThunk<
+  User,
+  {
+    jwt: string;
+    userData: {
+      fullName: string;
+      mobile: string;
+    };
+  }
+>(
+  "user/updateUserProfile",
 
+  async ({ jwt, userData }, { rejectWithValue }) => {
+
+    try {
+
+      const response = await api.put(
+        `${API_URL}/profile`,
+        userData,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+
+      return response.data;
+
+    } catch (error: any) {
+
+      return rejectWithValue(
+        error.response?.data?.message ||
+        "Failed to update profile"
+      );
+    }
+  }
+);
 // ================= USER SLICE =================
 
 const userSlice = createSlice({
@@ -132,7 +168,44 @@ const userSlice = createSlice({
           state.error = action.payload as string;
 
         }
-      );
+      )
+  .addCase(updateUserProfile.pending, (state) => {
+
+    state.loading = true;
+
+    state.error = null;
+
+    state.profileUpdated = false;
+
+  })
+
+  .addCase(
+    updateUserProfile.fulfilled,
+
+    (state, action: PayloadAction<User>) => {
+
+      state.loading = false;
+
+      state.user = action.payload;
+
+      state.profileUpdated = true;
+
+    }
+  )
+
+  .addCase(
+    updateUserProfile.rejected,
+
+    (state, action) => {
+
+      state.loading = false;
+
+      state.error = action.payload as string;
+
+      state.profileUpdated = false;
+
+    }
+  );
   },
 });
 
