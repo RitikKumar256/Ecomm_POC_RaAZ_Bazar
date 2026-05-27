@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.zosh.dto.UpdateProfileRequest;
 import com.zosh.exception.UserException;
 import com.zosh.service.UserService;
 import org.springframework.mail.SimpleMailMessage;
@@ -73,6 +74,26 @@ public class UserServiceImplementation implements UserService {
 		throw new UserException("user not exist with username "+username);
 	}
 
+	@Override
+	public User updateUserProfile(String jwt, UpdateProfileRequest request) throws UserException {
+		String email = jwtProvider.getEmailFromJwtToken(jwt);
+
+		User user = userRepository.findByEmail(email);
+
+		if (user == null) {
+			throw new UserException("User not found");
+		}
+
+		if (request.getFullName() != null && !request.getFullName().isEmpty()) {
+			user.setFullName(request.getFullName());
+		}
+
+		if (request.getMobile() != null && !request.getMobile().isEmpty()) {
+			user.setMobile(request.getMobile());
+		}
+
+		return userRepository.save(user);
+	}
 
 
 }

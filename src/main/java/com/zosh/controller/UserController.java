@@ -1,12 +1,10 @@
 package com.zosh.controller;
 
+import com.zosh.dto.UpdateProfileRequest;
 import com.zosh.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.zosh.exception.UserException;
 
@@ -30,6 +28,15 @@ public class UserController {
 		User user=userService.findUserProfileByJwt(jwt);
 		return new ResponseEntity<>(user,HttpStatus.ACCEPTED);
 	}
+	@PutMapping("/profile")
+	public ResponseEntity<User> updateUserProfileHandler(
+			@RequestHeader("Authorization") String jwt,
+			@RequestBody UpdateProfileRequest request
+	) throws UserException {
 
+		User updatedUser = userService.updateUserProfile(jwt, request);
+
+		return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+	}
 
 }
