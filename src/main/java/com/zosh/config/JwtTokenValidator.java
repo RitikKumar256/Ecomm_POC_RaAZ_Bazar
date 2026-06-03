@@ -29,6 +29,13 @@ public class JwtTokenValidator extends OncePerRequestFilter {
 									FilterChain filterChain)
 			throws ServletException, IOException {
 
+		String path = request.getServletPath();
+
+		// Skip JWT validation for auth APIs
+		if (path.startsWith("/auth")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
 		String bearerToken = request.getHeader(JwtConstant.JWT_HEADER);
 
 		if (bearerToken != null

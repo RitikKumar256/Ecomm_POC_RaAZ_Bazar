@@ -33,7 +33,7 @@ public class AppConfig {
 
                         .requestMatchers("/api/products/*/reviews").permitAll()
 
-                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/auth/**").permitAll()
 
                         .anyRequest().permitAll()
                 )
