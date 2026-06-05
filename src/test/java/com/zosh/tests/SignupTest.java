@@ -27,15 +27,9 @@ public class SignupTest {
 
         signupPage.clickLogin();
         signupPage.clickCreateAcc();
-        signupPage.enterEmail("monumonukumar9599@gmail.com");
+        signupPage.enterEmail("ritikmonu9599@gmail.com");
         signupPage.clickOtp();
-        try {
-            signupPage.enterotp("1");
-        }
-        catch (Exception e){
-            System.out.println("Failed to enter OTP: " + e.getMessage());
-            e.printStackTrace();
-        }
+        signupPage.enterotp();
         signupPage.entername("Ram");
         signupPage.clickSignUpBtn();
         String currentUrl = driver.getCurrentUrl();
