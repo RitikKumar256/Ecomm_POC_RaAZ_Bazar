@@ -265,19 +265,30 @@ const authSlice = createSlice({
 
   reducers: {
 
-    logout: (state) => {
+   logout: (
+     state,
+     action: PayloadAction<
+       "ROLE_ADMIN" | "ROLE_SELLER" | "ROLE_CUSTOMER"
+     >
+   ) => {
 
-      state.jwt = null;
-      state.role = null;
+     const role = action.payload;
 
-      // REMOVE TOKENS
-      localStorage.removeItem("admin_jwt");
-      localStorage.removeItem("seller_jwt");
-      localStorage.removeItem("customer_jwt");
+     if (role === "ROLE_ADMIN") {
+       localStorage.removeItem("admin_jwt");
+     }
 
-      // REMOVE ROLE
-      localStorage.removeItem("role");
-    },
+     if (role === "ROLE_SELLER") {
+       localStorage.removeItem("seller_jwt");
+     }
+
+     if (role === "ROLE_CUSTOMER") {
+       localStorage.removeItem("customer_jwt");
+     }
+
+     state.jwt = null;
+     state.role = null;
+   },
   },
 
   extraReducers: (builder) => {
@@ -407,10 +418,13 @@ export default authSlice.reducer;
 // ================= LOGOUT FUNCTION =================
 
 export const performLogout =
-  (navigate: any) =>
+  (
+    navigate: any,
+    role: "ROLE_ADMIN" | "ROLE_SELLER" | "ROLE_CUSTOMER"
+  ) =>
   async (dispatch: any) => {
 
-    dispatch(logout());
+    dispatch(logout(role));
 
     dispatch(resetUserState());
 

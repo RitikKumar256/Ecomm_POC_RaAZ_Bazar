@@ -22,7 +22,8 @@ public interface ProductRepository extends JpaRepository<Product,Long> , JpaSpec
             "LIKE LOWER(CONCAT('%', :query, '%')))"
     )
     List<Product> searchProduct(@Param("query") String query);
-
+    List<Product> findBySellerIdAndDeletedFalse(Long shopId);
+    List<Product> findByDeletedFalse();
 
 
 }

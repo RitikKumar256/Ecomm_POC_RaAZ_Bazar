@@ -70,16 +70,29 @@ const Cart = () => {
   }, [coupone.couponApplied, coupone.error]);
 
   console.log("cart ", cart);
-
+const hasOutOfStockItem = cart.cart?.cartItems.some(
+  (item: any) =>
+    !item.product?.in_stock ||
+    item.product?.quantity === 0
+);
   return (
     <>
       {cart.cart && cart.cart?.cartItems.length !== 0 ? (
         <div className="pt-10 px-5 sm:px-10 md:px-60 lg:px-60 min-h-screen">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 ">
             <div className="lg:col-span-2 space-y-3 ">
-              {cart.cart?.cartItems.map((item: CartItem) => (
-                <CartItemCard key={item.id} item={item} />
-              ))}
+             {cart.cart?.cartItems.map((item: CartItem) => (
+               <div key={item.id}>
+                 <CartItemCard item={item} />
+
+                 {(!item.product?.in_stock ||
+                   item.product?.quantity === 0) && (
+                   <p className="text-red-600 text-sm font-semibold ml-2 mt-1">
+                     This product is out of stock
+                   </p>
+                 )}
+               </div>
+             ))}
             </div>
 
             <div className="col-span-1 text-sm space-y-3">
@@ -130,8 +143,9 @@ const Cart = () => {
 
                 <div className="p-5">
                   <Button
-                    onClick={() => navigate("/checkout/address")}
-                    sx={{ py: "11px" }}
+                     onClick={() => navigate("/checkout/address")}
+                     disabled={hasOutOfStockItem}
+                      sx={{ py: "11px" }}
                     variant="contained"
                     fullWidth
                   >

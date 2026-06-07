@@ -8,8 +8,13 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button, IconButton, styled } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../Redux Toolkit/Store';
-import { fetchSellerProducts, updateProductStock } from '../../../Redux Toolkit/Seller/sellerProductSlice';
+import {
+  fetchSellerProducts,
+  updateProductStock,
+  deleteProduct
+} from '../../../Redux Toolkit/Seller/sellerProductSlice';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -53,7 +58,11 @@ export default function ProductTable() {
   const handleUpdateStack = (id: number | undefined)=>() => {
     dispatch(updateProductStock(id))
   }
-
+const handleDeleteProduct = (id: number | undefined) => {
+    if(window.confirm("Are you sure you want to delete this product?")){
+        dispatch(deleteProduct(id as number));
+    }
+}
   return (
     <>
       <h1 className='pb-5 font-bold text-xl'>Products</h1>
@@ -67,8 +76,11 @@ export default function ProductTable() {
               <StyledTableCell align="right">MRP</StyledTableCell>
               <StyledTableCell align="right">Selling Price</StyledTableCell>
               <StyledTableCell align="right">Color</StyledTableCell>
+              <StyledTableCell align="right">Quantity</StyledTableCell>
+              <StyledTableCell align="right">Stock Status</StyledTableCell>
               <StyledTableCell align="right">Update Stock</StyledTableCell>
               <StyledTableCell align="right">Update</StyledTableCell>
+              <StyledTableCell align="right">Delete</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -84,12 +96,45 @@ export default function ProductTable() {
                 <StyledTableCell align="right"> ₹{item.mrpPrice}.0</StyledTableCell>
                 <StyledTableCell align="right"> ₹{item.sellingPrice}.0</StyledTableCell>
                 <StyledTableCell align="right">{item.color}</StyledTableCell>
-                <StyledTableCell align="right"> <Button onClick={handleUpdateStack(item.id)} size='small'>{item.in_stock?"in_stock":"out_stock"}</Button></StyledTableCell>
                 <StyledTableCell align="right">
-                  <IconButton onClick={(()=>navigate("/seller/update-product/"+item.id))} color='primary' className='bg-primary-color'>
-                    <EditIcon />
-                  </IconButton>
+                  {item.quantity}
                 </StyledTableCell>
+
+                <StyledTableCell align="right">
+                  {item.in_stock ? (
+                    <span className="text-green-600 font-semibold">
+                      In Stock
+                    </span>
+                  ) : (
+                    <span className="text-red-600 font-semibold">
+                      Out Of Stock
+                    </span>
+                  )}
+                </StyledTableCell>
+                <StyledTableCell align="right"> <Button
+                                                  onClick={handleUpdateStack(item.id)}
+                                                  size='small'
+                                                  disabled={item.quantity === 0}
+                                                >
+                                                  {item.in_stock ? "in_stock" : "out_stock"}
+                                                </Button></StyledTableCell>
+             <StyledTableCell align="right">
+                 <IconButton
+                     color="primary"
+                     onClick={() => navigate(`/seller/update-product/${item.id}`)}
+                 >
+                     <EditIcon />
+                 </IconButton>
+             </StyledTableCell>
+
+             <StyledTableCell align="right">
+                 <IconButton
+                     color='error'
+                     onClick={() => handleDeleteProduct(item.id)}
+                 >
+                     <DeleteIcon />
+                 </IconButton>
+             </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>

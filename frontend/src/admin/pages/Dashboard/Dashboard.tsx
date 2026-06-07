@@ -56,7 +56,12 @@ const Dashboard = () => {
 
   // ================= LOGOUT =================
   const handleLogout = () => {
-    dispatch(performLogout(navigate));
+    dispatch(
+      performLogout(
+        navigate,
+        "ROLE_ADMIN"
+      )
+    );
   };
 
   // ================= LOADING =================

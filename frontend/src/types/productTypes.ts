@@ -23,5 +23,6 @@ export interface Product {
     seller?: Seller; // Placeholder for Seller interface (assuming it exists)
     createdAt?: Date; // Assuming LocalDateTime can be mapped to Date
     sizes: string; // Array of strings for product sizes
+    quantity:number;
     in_stock?: boolean; //
   }

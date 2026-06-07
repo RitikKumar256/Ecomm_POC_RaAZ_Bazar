@@ -60,6 +60,15 @@ public class CartServiceImplementation implements CartService {
 								String size,
 								int quantity
 								) throws ProductException {
+		if (!product.isIn_stock() || product.getQuantity() <= 0) {
+			throw new ProductException("Product is out of stock");
+		}
+
+		if (quantity > product.getQuantity()) {
+			throw new ProductException(
+					"Only " + product.getQuantity() + " quantity available"
+			);
+		}
 		Cart cart=findUserCart(user);
 		
 		CartItem isPresent=cartItemRepository.findByCartAndProductAndSize(

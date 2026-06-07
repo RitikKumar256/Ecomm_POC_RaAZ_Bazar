@@ -15,43 +15,43 @@ const menu = [
         name: "Dashboard",
         path: "/admin",
         icon: <DashboardIcon className="text-primary-color" />,
-        activeIcon: <DashboardIcon className="text-white" />,
+        activeIcon: <DashboardIcon />,
     },
     {
         name: "Coupons",
         path: "/admin/coupon",
         icon: <IntegrationInstructionsIcon className="text-primary-color" />,
-        activeIcon: <IntegrationInstructionsIcon className="text-white" />,
+        activeIcon: <DashboardIcon />,
     },
     {
         name: "Add New Coupon",
         path: "/admin/add-coupon",
         icon: <AddIcon className="text-primary-color" />,
-        activeIcon: <AddIcon className="text-white" />,
+        activeIcon: <DashboardIcon />,
     },
     {
         name: "Home Page",
         path: "/admin/home-grid",
         icon: <HomeIcon className="text-primary-color" />,
-        activeIcon: <HomeIcon className="text-white" />,
+        activeIcon: <DashboardIcon />,
     },
     {
         name: "Electronics Category",
         path: "/admin/electronics-category",
         icon: <ElectricBoltIcon className="text-primary-color" />,
-        activeIcon: <ElectricBoltIcon className="text-white" />,
+        activeIcon: <DashboardIcon />,
     },
     {
         name: "Shop By Category",
         path: "/admin/shop-by-category",
         icon: <Category className="text-primary-color" />,
-        activeIcon: <Category className="text-white" />,
+        activeIcon: <DashboardIcon />,
     },
     {
         name: "Deals",
         path: "/admin/deals",
         icon: <LocalOfferIcon className="text-primary-color" />,
-        activeIcon: <LocalOfferIcon className="text-white" />,
+        activeIcon: <DashboardIcon />,
     },
    
 ];
@@ -62,13 +62,13 @@ const menu2 = [
         name: "Account",
         path: "/seller/account",
         icon: <AccountBoxIcon className="text-primary-color" />,
-        activeIcon: <AccountBoxIcon className="text-white" />,
+        activeIcon: <DashboardIcon />,
     },
     {
         name: "Logout",
         path: "/",
         icon: <LogoutIcon className="text-primary-color" />,
-        activeIcon: <LogoutIcon className="text-white" />,
+        activeIcon: <DashboardIcon />,
     },
 
 ]

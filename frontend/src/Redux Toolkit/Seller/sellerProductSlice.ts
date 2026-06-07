@@ -83,7 +83,11 @@ export const deleteProduct = createAsyncThunk<void, number>(
   "sellerProduct/deleteProduct",
   async (productId, { rejectWithValue }) => {
     try {
-      await api.delete(`${API_URL}/${productId}`);
+    await api.delete(`${API_URL}/${productId}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`
+        }
+    });
     } catch (error: any) {
       return rejectWithValue(error.response.data);
     }
@@ -150,6 +154,7 @@ const sellerProductSlice = createSlice({
       })
       .addCase(
         updateProduct.fulfilled,
+
         (state, action: PayloadAction<Product>) => {
           const index = state.products.findIndex(
             (product) => product.id === action.payload.id
@@ -158,6 +163,7 @@ const sellerProductSlice = createSlice({
             state.products[index] = action.payload;
           }
           state.loading = false;
+          state.productCreated = true;
         }
       )
       .addCase(updateProduct.rejected, (state, action) => {

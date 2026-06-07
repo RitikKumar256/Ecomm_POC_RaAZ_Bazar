@@ -28,18 +28,33 @@ const DrawerList = ({ toggleDrawer,menu,menu2 }: DrawerListProps) => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        dispatch(performLogout())
+       dispatch(
+         performLogout(
+           navigate,
+           "ROLE_SELLER"
+         )
+       );
     }
 
-    const handleClick = (item: any)=>() => {
+   const handleClick = (item: any) => () => {
 
-        if (item.name === "Logout") {
-            handleLogout()
+       if (item.name === "Logout") {
 
-        }
-        navigate(item.path);
-        if(toggleDrawer) toggleDrawer(false)();
-    }
+           handleLogout();
+
+           if (toggleDrawer) {
+               toggleDrawer(false)();
+           }
+
+           return;
+       }
+
+       navigate(item.path);
+
+       if (toggleDrawer) {
+           toggleDrawer(false)();
+       }
+   }
     return (
         <div className="h-full">
             <div
@@ -52,8 +67,17 @@ const DrawerList = ({ toggleDrawer,menu,menu2 }: DrawerListProps) => {
                             <div key={item.name}
                                 onClick={handleClick(item)}
                                 className="pr-9 cursor-pointer">
-                                <p className={`${item.path === location.pathname ? "bg-primary-color text-white " : "text-primary-color"} flex items-center px-5 py-3 rounded-r-full`}>
-                                    <ListItemIcon>{location.pathname === item.path ? item.activeIcon : item.icon}</ListItemIcon>
+                                <p
+                                className={`flex items-center px-5 py-3 rounded-r-full transition-all duration-200 ${
+                                item.path === location.pathname
+                                ? "bg-blue-600 text-white shadow-md"
+                                : "text-primary-color hover:bg-gray-100"
+                                }`}
+                                >
+                                   <ListItemIcon className="min-w-[40px]">
+                                        {location.pathname === item.path ? item.activeIcon : item.icon}
+                                       </ListItemIcon>
+
                                     <ListItemText primary={item.name} />
                                 </p>
                             </div>
@@ -65,8 +89,16 @@ const DrawerList = ({ toggleDrawer,menu,menu2 }: DrawerListProps) => {
                     <div className="space-y-2">
                         {menu2.map((item, index) => (
                             <div onClick={handleClick(item)} className="pr-9 cursor-pointer" key={item.name}>
-                                <p className={`${item.path === location.pathname ? " bg-primary-color text-white " : "text-primary-color"} flex items-center px-5 py-3 rounded-r-full`}>
-                                    <ListItemIcon>{location.pathname === item.path ? item.activeIcon : item.icon}</ListItemIcon>
+                                <p
+                                className={`flex items-center px-5 py-3 rounded-r-full transition-all duration-200 ${
+                                item.path === location.pathname
+                                ? "bg-blue-600 text-white shadow-md"
+                                : "text-primary-color hover:bg-gray-100"
+                                }`}
+                                >
+                                   <ListItemIcon className="min-w-[40px]">
+                                        {location.pathname === item.path ? item.activeIcon : item.icon}
+                                       </ListItemIcon>
                                     <ListItemText primary={item.name} />
                                 </p>
                             </div>

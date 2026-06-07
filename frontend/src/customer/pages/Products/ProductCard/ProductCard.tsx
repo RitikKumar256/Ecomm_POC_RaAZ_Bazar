@@ -70,18 +70,25 @@ const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
     return (
         <>
             <div
-                onClick={() =>
-                    navigate(
-                        `/product-details/${item.category?.categoryId}/${item.title}/${item.id}`
-                    )
-                }
+                  onClick={() => {
+                        if (!item.in_stock || item.quantity === 0) return;
+
+                        navigate(
+                            `/product-details/${item.category?.categoryId}/${item.title}/${item.id}`
+                        );
+                    }}
                 className="group px-4 relative"
             >
                 <div
-                    className="card "
+                    className="card relative"
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
                 >
+                {(!item.in_stock || item.quantity === 0) && (
+                    <div className="absolute top-2 left-2 bg-red-600 text-white px-3 py-1 rounded-md z-10 text-sm font-bold">
+                        OUT OF STOCK
+                    </div>
+                )}
                     {item.images.map((image: any, index: number) => (
                         <img
                             key={index}
@@ -139,6 +146,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ item }) => {
                         </h1>
                         <p className="">{item.title}</p>
                     </div>
+                    {!item.in_stock && (
+                        <p className="text-red-600 font-bold">
+                            Out Of Stock
+                        </p>
+                    )}
                     <div className="price flex items-center gap-3 ">
                         <span className="font-semibold text-gray-800">
                             {" "}

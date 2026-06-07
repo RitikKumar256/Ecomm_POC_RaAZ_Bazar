@@ -60,4 +60,13 @@ public class Product {
     private List<Review> reviews = new ArrayList<>();
 
    private boolean in_stock = true;
+    @Column(nullable = false)
+    private boolean deleted = false;
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 }

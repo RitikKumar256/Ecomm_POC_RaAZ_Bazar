@@ -23,7 +23,7 @@ public class SignupTest {
     }
 
     @Test
-    public void validLoginTest() {
+    public void validSignupTest() {
 
         signupPage.clickLogin();
         signupPage.clickCreateAcc();

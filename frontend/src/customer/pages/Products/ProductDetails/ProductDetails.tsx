@@ -56,13 +56,34 @@ const ProductDetails = () => {
 
     }, [productId])
 
-    const handleAddCart = () => {
-        dispatch(addItemToCart({
-            jwt: localStorage.getItem('jwt'),
-            request: { productId: Number(productId), size: "FREE", quantity }
+  const handleAddCart = () => {
 
-        }))
-    }
+      if (!products.product?.in_stock ||
+          products.product.quantity <= 0) {
+
+          alert("Product is out of stock");
+          return;
+      }
+
+      if (quantity > products.product.quantity) {
+
+          alert(
+              `Only ${products.product.quantity} items available`
+          );
+
+          return;
+      }
+
+      dispatch(addItemToCart({
+          jwt: localStorage.getItem('jwt'),
+          request: {
+              productId: Number(productId),
+              size: "FREE",
+              quantity
+          }
+
+      }))
+  }
 
  
 
@@ -109,6 +130,14 @@ const ProductDetails = () => {
                     </div>
 
                     <div className='space-y-2'>
+                    {(!products.product?.in_stock ||
+                      products.product?.quantity === 0) && (
+                      <div className="mt-4">
+                        <span className="bg-red-600 text-white px-4 py-2 rounded-md font-semibold">
+                          OUT OF STOCK
+                        </span>
+                      </div>
+                    )}
                         <div className='price flex items-center gap-3 mt-5 text-lg'>
                             <span className='font-semibold text-gray-800' > ₹{products.product?.sellingPrice}</span>
                             <span className='text thin-line-through text-gray-400 '>₹{products.product?.mrpPrice}</span>
@@ -148,6 +177,10 @@ const ProductDetails = () => {
                     <div className='mt-7 space-y-2'>
                         <h1>QUANTITY:</h1>
                         <div className=' flex items-center gap-2  w-[140px] justify-between'>
+                        <p className='text-sm text-gray-600'>
+                            Available Quantity :
+                            {products.product?.quantity}
+                        </p>
 
                             <Button disabled={quantity == 1} onClick={() => setQuantity(quantity - 1)} variant='outlined'>
                                 <RemoveIcon />
@@ -155,7 +188,11 @@ const ProductDetails = () => {
                             <span className='px-3 text-lg font-semibold'>
                                 {quantity}
                             </span>
-                            <Button onClick={() => setQuantity(quantity + 1)} variant='outlined'>
+                           <Button
+                             onClick={() => setQuantity(quantity + 1)}
+                             variant='outlined'
+                             disabled={quantity >= (products.product?.quantity || 1)}
+                           >
                                 <AddIcon />
                             </Button>
 
@@ -163,12 +200,21 @@ const ProductDetails = () => {
                     </div>
 
                     <div className="mt-12 flex items-center gap-5">
-                        <Button
-                            onClick={handleAddCart}
-                            sx={{ py: "1rem" }}
-                            variant='contained' fullWidth startIcon={<AddShoppingCartIcon />}>
-                            Add To Bag
-                        </Button>
+                     <Button
+                         onClick={handleAddCart}
+                             disabled={
+                                 !products.product?.in_stock ||
+                                 products.product?.quantity === 0
+                             }
+                         sx={{ py: "1rem" }}
+                         variant='contained'
+                         fullWidth
+                         startIcon={<AddShoppingCartIcon />}
+                     >
+                         {!products.product?.in_stock
+                             ? "Out Of Stock"
+                             : "Add To Bag"}
+                     </Button>
                         <Button
                             sx={{ py: "1rem" }}
                             variant='outlined' fullWidth startIcon={<FavoriteBorderIcon />}>

@@ -4,10 +4,7 @@ import com.zosh.domain.OrderStatus;
 import com.zosh.domain.PaymentStatus;
 import com.zosh.exception.OrderException;
 import com.zosh.model.*;
-import com.zosh.repository.AddressRepository;
-import com.zosh.repository.OrderItemRepository;
-import com.zosh.repository.OrderRepository;
-import com.zosh.repository.UserRepository;
+import com.zosh.repository.*;
 
 import com.zosh.service.CartService;
 import com.zosh.service.OrderItemService;
@@ -28,7 +25,7 @@ public class OrderServiceImplementation implements OrderService {
 	private final UserRepository userRepository;
 	private final OrderItemService orderItemService;
 	private final OrderItemRepository orderItemRepository;
-	
+	private final ProductRepository productRepository;
 
 
 	@Override
@@ -74,6 +71,24 @@ public class OrderServiceImplementation implements OrderService {
 			List<OrderItem> orderItems=new ArrayList<>();
 
 			for(CartItem item: cartItems) {
+				Product product = item.getProduct();
+
+				if(product.getQuantity() < item.getQuantity()){
+					throw new RuntimeException(
+							product.getTitle() + " is out of stock"
+					);
+				}
+
+				int updatedQuantity = product.getQuantity() - item.getQuantity();
+
+				product.setQuantity(updatedQuantity);
+
+				if(updatedQuantity <= 0){
+					product.setQuantity(0);
+					product.setIn_stock(false);
+				}
+
+				productRepository.save(product);
 				OrderItem orderItem=new OrderItem();
 
 				orderItem.setOrder(savedOrder);
@@ -120,10 +135,20 @@ public class OrderServiceImplementation implements OrderService {
 	}
 
 	@Override
-	public Order updateOrderStatus(Long orderId, OrderStatus orderStatus)
+	public Order updateOrderStatus(Long orderId,
+								   OrderStatus orderStatus)
 			throws OrderException {
-		Order order=findOrderById(orderId);
+
+		Order order = findOrderById(orderId);
+
+		if(order.getOrderStatus() == OrderStatus.DELIVERED){
+			throw new OrderException(
+					"Delivered order status cannot be changed"
+			);
+		}
+
 		order.setOrderStatus(orderStatus);
+
 		return orderRepository.save(order);
 	}
 
@@ -139,6 +164,11 @@ public class OrderServiceImplementation implements OrderService {
 	@Override
 	public Order cancelOrder(Long orderId, User user) throws OrderException {
 		Order order=this.findOrderById(orderId);
+		if(order.getOrderStatus() == OrderStatus.DELIVERED){
+			throw new OrderException(
+					"Delivered order cannot be cancelled"
+			);
+		}
 		if(user.getId()!=order.getUser().getId()){
 			throw new OrderException("you can't perform this action "+orderId);
 		}

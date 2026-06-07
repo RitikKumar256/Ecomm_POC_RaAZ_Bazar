@@ -32,11 +32,17 @@ public class CreateProductRequest {
 
     @Column(length = 5000)
     private List<String> images;
-
     private String category;
     private String category2;
     private String category3;
-
     private String sizes;
-    
+    private int quantity;
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }

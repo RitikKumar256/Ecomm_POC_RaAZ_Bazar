@@ -38,10 +38,10 @@ public class ProductServiceImpl implements ProductService {
 
                                  Seller seller
                                  ) throws ProductException {
-
-
+        if (req.getSellingPrice() > req.getMrpPrice()) {
+            throw new ProductException("Selling price cannot be greater than MRP price");
+        }
         int discountPercentage = calculateDiscountPercentage(req.getMrpPrice(), req.getSellingPrice());
-
         Category category1=categoryRepository.findByCategoryId(req.getCategory());
         if(category1==null){
             Category category=new Category();
@@ -83,32 +83,57 @@ public class ProductServiceImpl implements ProductService {
         product.setMrpPrice(req.getMrpPrice());
         product.setSizes(req.getSizes());
         product.setCreatedAt(LocalDateTime.now());
+        product.setQuantity(req.getQuantity());
+        product.setIn_stock(req.getQuantity() > 0);
 
         return productRepository.save(product);
     }
 
     public static int calculateDiscountPercentage(double mrpPrice, double sellingPrice) {
+
         if (mrpPrice <= 0) {
-            throw new IllegalArgumentException("Actual price must be greater than zero.");
+            throw new IllegalArgumentException("MRP must be greater than zero");
         }
-        double discount = mrpPrice - sellingPrice;
-        double discountPercentage = (discount / mrpPrice) * 100;
-        return (int) discountPercentage;
+
+        if (sellingPrice > mrpPrice) {
+            throw new IllegalArgumentException("Selling price cannot be greater than MRP price");
+        }
+
+        double discountPercentage =
+                ((mrpPrice - sellingPrice) * 100.0) / mrpPrice;
+
+        return (int) Math.round(discountPercentage);
     }
 
     @Override
     public void deleteProduct(Long productId) throws ProductException {
         Product product=findProductById(productId);
-        productRepository.delete(product);
+        product.setDeleted(true);
+        productRepository.save(product);
 
     }
 
     @Override
-    public Product updateProduct(Long productId, Product product) throws ProductException {
-        productRepository.findById(productId);
-        product.setId(productId);
-        return productRepository.save(product);
+    public Product updateProduct(Long productId, Product updatedProduct)
+            throws ProductException {
+        if (updatedProduct.getSellingPrice() > updatedProduct.getMrpPrice()) {
+            throw new ProductException("Selling price cannot be greater than MRP price");
+        }
 
+        Product existingProduct = findProductById(productId);
+
+        existingProduct.setTitle(updatedProduct.getTitle());
+        existingProduct.setDescription(updatedProduct.getDescription());
+        existingProduct.setMrpPrice(updatedProduct.getMrpPrice());
+        existingProduct.setSellingPrice(updatedProduct.getSellingPrice());
+        existingProduct.setQuantity(updatedProduct.getQuantity());
+        existingProduct.setColor(updatedProduct.getColor());
+        existingProduct.setImages(updatedProduct.getImages());
+        existingProduct.setSizes(updatedProduct.getSizes());
+
+        existingProduct.setIn_stock(updatedProduct.getQuantity() > 0);
+
+        return productRepository.save(existingProduct);
     }
 
     @Override
@@ -142,6 +167,7 @@ public class ProductServiceImpl implements ProductService {
                                        Integer pageNumber) {
         Specification<Product> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.equal(root.get("deleted"), false));
 
 
             if (category != null) {
@@ -184,7 +210,7 @@ public class ProductServiceImpl implements ProductService {
             }
 
             if (stock != null) {
-                predicates.add(criteriaBuilder.equal(root.get("stock"), stock));
+                predicates.add(criteriaBuilder.equal(root.get("in_stock"), stock));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
@@ -213,6 +239,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getProductBySellerId(Long sellerId) {
-        return productRepository.findBySellerId(sellerId);
+        return productRepository.findBySellerIdAndDeletedFalse(sellerId);
     }
 }

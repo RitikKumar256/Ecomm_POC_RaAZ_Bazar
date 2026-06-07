@@ -25,16 +25,26 @@ const Profile = () => {
     const [snackbarOpen, setOpenSnackbar] = useState(false);
 
     const handleLogout = () => {
-        dispatch(performLogout())
-        navigate("/")
+       dispatch(
+         performLogout(
+           navigate,
+           "ROLE_CUSTOMER"
+         )
+       );
+
     }
 
-    const handleClick = (item: any) => {
-        if (item.name === "Logout") {
-            handleLogout()
-        }
-        else navigate(`${item.path}`)
-    }
+   const handleClick = (item: any) => {
+
+       if (item.name === "Logout") {
+
+           handleLogout();
+
+           return;
+       }
+
+       navigate(`${item.path}`);
+   }
     const handleCloseSnackbar = () => {
         setOpenSnackbar(false);
     };
