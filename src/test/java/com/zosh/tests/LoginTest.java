@@ -27,9 +27,23 @@ public class LoginTest {
         loginPage.enterEmail("monumonukumar9599@gmail.com");
         loginPage.clickOtp();
         loginPage.enterotp();
-        loginPage.clickLoginbtn();
-       // loginPage.handlealert();
+        try {
+            loginPage.clickLoginbtn();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        //loginPage.handleToken();
+        loginPage.validateLogin();
 
+        loginPage.clickAvtar();
+        try {
+            loginPage.clickLogout();
+        }
+       catch (Exception e){
+            e.printStackTrace();
+       }
+        loginPage.validateLogout();
     }
     @AfterMethod
     public void tearDown() {

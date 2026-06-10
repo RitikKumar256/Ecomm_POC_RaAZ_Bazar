@@ -27,7 +27,11 @@ const CustomerRoutes = () => {
     const { cart, auth } = useAppSelector(store => store);
 
     useEffect(() => {
-        dispatch(fetchUserCart(localStorage.getItem("jwt") || ""))
+       dispatch(
+         fetchUserCart(
+           localStorage.getItem("customer_jwt") || ""
+         )
+       )
         dispatch(getWishlistByUserId())
     }, [auth.jwt])
   return (

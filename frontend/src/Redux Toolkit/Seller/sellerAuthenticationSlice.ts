@@ -39,8 +39,9 @@ export const verifyLoginOtp = createAsyncThunk('otp/verifyLoginOtp',
     try {
         const response = await api.post('/sellers/verify/login-top', data);
         console.log("login seller success - ", response.data)
-        localStorage.setItem("jwt",response.data.jwt)
-        data.navigate("/seller")
+        localStorage.setItem("seller_jwt", response.data.jwt);
+        localStorage.setItem("role", "ROLE_SELLER");
+        data.navigate("/seller");
         return response.data;
     } catch (error:any) {
         console.log("error",error.response?.data)

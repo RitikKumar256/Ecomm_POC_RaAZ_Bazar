@@ -14,7 +14,7 @@ export const getWishlistByUserId = createAsyncThunk(
     try {
       const response = await api.get(`/api/wishlist`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          Authorization: `Bearer ${localStorage.getItem("customer_jwt")}`,
         },
       });
       console.log("wishlist fetch ", response.data);
@@ -40,7 +40,7 @@ export const addProductToWishlist = createAsyncThunk(
         { },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+           Authorization: `Bearer ${localStorage.getItem("customer_jwt")}`,
           },
         }
       );

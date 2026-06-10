@@ -162,7 +162,7 @@ export const updateSeller = createAsyncThunk<
     try {
       const response = await api.patch(`${API_URL}`, seller,{
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          Authorization: `Bearer ${localStorage.getItem("seller_jwt")}`,
         },
       });
       console.log("seller updated successfully", response.data);
@@ -269,7 +269,20 @@ export const deleteSeller = createAsyncThunk<void, number>(
 const sellerSlice = createSlice({
   name: "sellers",
   initialState,
-  reducers: {},
+
+  reducers: {
+
+    resetSellerState: (state) => {
+
+      state.sellers = [];
+      state.selectedSeller = null;
+      state.profile = null;
+      state.loading = false;
+      state.error = null;
+      state.report = null;
+      state.profileUpdated = false;
+    },
+  },
   extraReducers: (builder) => {
     builder
 
@@ -397,7 +410,7 @@ const sellerSlice = createSlice({
       });
   },
 });
-
+export const { resetSellerState } = sellerSlice.actions;
 export default sellerSlice.reducer;
 
 // Define selector functions

@@ -24,7 +24,11 @@ const HomePage = () => {
   const [chartType, setChartType] = React.useState(Chart[0].value);
 
   useEffect(() => {
-    dispatch(fetchSellerReport(localStorage.getItem("jwt") || ""));
+    dispatch(
+      fetchSellerReport(
+        localStorage.getItem("seller_jwt") || ""
+      )
+    );
   }, []);
 
   const handleChange = (event: SelectChangeEvent) => {

@@ -128,7 +128,7 @@ export const cancelOrder = createAsyncThunk<Order, any>(
     try {
       const response = await api.put(`${API_URL}/${orderId}/cancel`, {}, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+         Authorization: `Bearer ${localStorage.getItem("customer_jwt")}`,
         },
       });
       console.log("cancel order ",response.data)

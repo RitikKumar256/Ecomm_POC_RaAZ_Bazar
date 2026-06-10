@@ -1,20 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../Redux Toolkit/Store";
-import { logout } from "../../Redux Toolkit/Customer/AuthSlice";
+import { performLogout } from "../../Redux Toolkit/Customer/AuthSlice";
 
 const AdminNavbar = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const handleLogout = () => {
-    dispatch(logout());
-
-    localStorage.removeItem("admin_jwt");
-    localStorage.removeItem("role");
-
-    navigate("/admin-login");
-  };
+const handleLogout = () => {
+  dispatch(performLogout(navigate));
+};
 
   return (
     <div className="flex justify-between items-center p-4 bg-gray-900 text-white">

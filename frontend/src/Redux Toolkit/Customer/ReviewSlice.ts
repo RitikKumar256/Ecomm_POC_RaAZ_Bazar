@@ -24,7 +24,7 @@ export const fetchReviewsByProductId = createAsyncThunk<
         `${API_URL}/products/${productId}/reviews`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            Authorization: `Bearer ${localStorage.getItem("customer_jwt")}`,
           },
         }
       );

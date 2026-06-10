@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 
 import { api } from "../../Config/Api";
-
+import { resetSellerState } from "../Seller/sellerSlice";
 import type {
   AuthResponse,
   LoginRequest,
@@ -265,30 +265,19 @@ const authSlice = createSlice({
 
   reducers: {
 
-   logout: (
-     state,
-     action: PayloadAction<
-       "ROLE_ADMIN" | "ROLE_SELLER" | "ROLE_CUSTOMER"
-     >
-   ) => {
+logout: (state) => {
 
-     const role = action.payload;
+  localStorage.removeItem("admin_jwt");
+  localStorage.removeItem("seller_jwt");
+  localStorage.removeItem("customer_jwt");
+  localStorage.removeItem("role");
 
-     if (role === "ROLE_ADMIN") {
-       localStorage.removeItem("admin_jwt");
-     }
-
-     if (role === "ROLE_SELLER") {
-       localStorage.removeItem("seller_jwt");
-     }
-
-     if (role === "ROLE_CUSTOMER") {
-       localStorage.removeItem("customer_jwt");
-     }
-
-     state.jwt = null;
-     state.role = null;
-   },
+  state.jwt = null;
+  state.role = null;
+  state.loading = false;
+  state.error = null;
+  state.otpSent = false;
+},
   },
 
   extraReducers: (builder) => {
@@ -419,18 +408,19 @@ export default authSlice.reducer;
 
 export const performLogout =
   (
-    navigate: any,
-    role: "ROLE_ADMIN" | "ROLE_SELLER" | "ROLE_CUSTOMER"
+    navigate: any
   ) =>
   async (dispatch: any) => {
 
-    dispatch(logout(role));
+    dispatch(logout());
 
     dispatch(resetUserState());
 
     dispatch(resetCartState());
 
-    navigate("/");
+    dispatch(resetSellerState());
+
+    window.location.href = "/";
 };
 
 // ================= SELECTORS =================

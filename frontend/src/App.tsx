@@ -29,7 +29,8 @@ import { createHomeCategories } from './Redux Toolkit/Customer/Customer/AsyncThu
 import { homeCategories } from './data/homeCategories';
 
 import Mobile from './data/Products/mobile';
-
+import AdminProtectedRoute from './routes/AdminProtectedRoute';
+import SellerProtectedRoute from './routes/SellerProtectedRoute';
 function App() {
 
   const dispatch = useAppDispatch();
@@ -43,9 +44,11 @@ function App() {
 
   useEffect(() => {
 
-   const jwt =
-     localStorage.getItem("admin_jwt") ||
-     localStorage.getItem("customer_jwt");
+
+    const jwt =
+      localStorage.getItem("admin_jwt") ||
+      localStorage.getItem("seller_jwt") ||
+      localStorage.getItem("customer_jwt");
 
     console.log("JWT TOKEN :", jwt);
 
@@ -82,22 +85,23 @@ function App() {
 
         <Routes>
 
-          {sellers.profile && (
-            <Route
-              path='/seller/*'
-              element={<SellerDashboard />}
-            />
-          )}
+       <Route
+         path='/seller/*'
+         element={
+           <SellerProtectedRoute>
+             <SellerDashboard />
+           </SellerProtectedRoute>
+         }
+       />
 
-          <Route
-            path='/admin/*'
-            element={
-              user?.user?.role === "ROLE_ADMIN" ||
-              user?.user?.role === "ADMIN"
-                ? <AdminDashboard />
-                : <h1>Access Denied</h1>
-            }
-          />
+        <Route
+          path='/admin/*'
+          element={
+            <AdminProtectedRoute>
+              <AdminDashboard />
+            </AdminProtectedRoute>
+          }
+        />
 
           <Route
             path='/verify-seller/:otp'

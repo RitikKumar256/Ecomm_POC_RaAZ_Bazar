@@ -27,7 +27,7 @@ export const chatBot = createAsyncThunk<
       const response = await api.post("/ai/chat", prompt, {
         headers: {
           "Content-Type": "application/json",
-          "Authorization":`Bearer ${localStorage.getItem("jwt")}`
+         "Authorization":`Bearer ${localStorage.getItem("customer_jwt")}`
         },
         params: {
           userId,

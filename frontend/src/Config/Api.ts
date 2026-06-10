@@ -15,9 +15,21 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
 
-   const token =
-     localStorage.getItem("admin_jwt") ||
-     localStorage.getItem("customer_jwt");
+const role = localStorage.getItem("role");
+
+let token = null;
+
+if (role === "ROLE_ADMIN") {
+  token = localStorage.getItem("admin_jwt");
+}
+
+else if (role === "ROLE_SELLER") {
+  token = localStorage.getItem("seller_jwt");
+}
+
+else if (role === "ROLE_CUSTOMER") {
+  token = localStorage.getItem("customer_jwt");
+}
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
