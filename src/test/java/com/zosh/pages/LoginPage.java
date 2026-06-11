@@ -14,8 +14,8 @@ public class LoginPage {
         this.driver=driver;
     }
     By loginbtn=By.xpath("//button[text()='Login']");
-    By emailtext=By.name("email");
-    By otpbtn=By.xpath("//button[text()='sent otp']");
+    By emailtext=By.xpath("//input[@type='email']");
+    By otpbtn=By.xpath("//button[text()='Send OTP']");
     By otpfield = By.xpath("//input[contains(@id,'otp-input-')]");
     By Loginbtn=By.xpath("(//button[text()='Login'])[2]");
     By avtar=By.xpath("//img[contains(@class,'MuiAvatar-img')]");
@@ -63,14 +63,10 @@ public class LoginPage {
         });
     }
     public void clickLoginbtn() {
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-
         WebElement button = wait.until(
                 ExpectedConditions.elementToBeClickable(Loginbtn));
-
         button.click();
-
         wait.until(ExpectedConditions.visibilityOfElementLocated(profileBtn));
     }
     public void clickAvtar(){
@@ -81,20 +77,14 @@ public class LoginPage {
         System.out.println(button.isDisplayed());
         System.out.println(button.isEnabled());
     }
-    public void clickLogout() {
-
+    public void clickLogout() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement button = wait.until(
                 ExpectedConditions.elementToBeClickable(logoutbtn));
         button.click();
-        // WAIT FOR LOGIN PAGE OR LOGIN BUTTON (REAL SIGN OF LOGOUT)
         wait.until(ExpectedConditions.visibilityOfElementLocated(loginbtn));
-        // OPTIONAL: small stabilization wait
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+            Thread.sleep(2000);
+
     }
     public void validateLogin() {
 
@@ -130,18 +120,4 @@ public class LoginPage {
         Assert.assertTrue(tokenRemoved, "Logout Failed - Token still present");
         System.out.println("Logout Successful");
     }
-//    public void handlealert(){
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-//        WebElement toast = wait.until(
-//                ExpectedConditions.visibilityOfElementLocated((alert)
-//                )
-//        );
-//        // Wait until text is present
-//       // wait.until(ExpectedConditions.textToBePresentInElement(toast, "otp"));
-////        String actualMessage = toast.getText().trim();
-////        System.out.println("Actual Message: " + actualMessage);
-////        boolean result = actualMessage.equalsIgnoreCase("otp sent to your email!");
-////        System.out.println("Assertion Result: " + result);
-////        Assert.assertTrue(result);
-//    }
 }

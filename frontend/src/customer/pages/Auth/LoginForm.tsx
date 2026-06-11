@@ -85,6 +85,7 @@ const LoginForm = () => {
 
                 <TextField
                     fullWidth
+                     type="email"
                     name="email"
                     label="Enter Your Email"
                     value={formik.values.email}
@@ -133,7 +134,7 @@ const LoginForm = () => {
                     variant='contained'
                     onClick={handleSentOtp}
                     sx={{ py: "11px" }}>{
-                        auth.loading ? <CircularProgress  />: "sent otp"}</Button>
+                        auth.loading ? <CircularProgress  />: "Send OTP"}</Button>
                 }
 
 
