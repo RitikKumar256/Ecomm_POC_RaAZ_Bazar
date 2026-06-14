@@ -23,6 +23,7 @@ import com.zosh.service.UserService;
 import com.zosh.utils.OtpUtils;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -52,7 +53,11 @@ public class AuthServiceImpl implements AuthService {
     private final CustomeUserServiceImplementation customUserDetails;
     private final CartRepository cartRepository;
     private final ActiveUserService activeUserService;
+    @Value("${app.testing.mode}")
+    private boolean testingMode;
 
+    @Value("${app.static.otp}")
+    private String staticOtp;
     @Override
     public void sentLoginOtp(String email) throws UserException, MessagingException {
 
@@ -70,9 +75,14 @@ public class AuthServiceImpl implements AuthService {
         if (isExist != null) {
             verificationCodeRepository.delete(isExist);
         }
-
-        String otp = OtpUtils.generateOTP();
-
+        //stop otp changes
+        String otp;
+        if(testingMode){
+            otp = staticOtp;
+        }
+        else{
+            otp = OtpUtils.generateOTP();
+        }
         VerificationCode verificationCode = new VerificationCode();
         verificationCode.setOtp(otp);
         verificationCode.setEmail(email);
@@ -80,7 +90,10 @@ public class AuthServiceImpl implements AuthService {
 
         String subject = "Zosh Bazaar Login/Signup Otp";
         String text = "your login otp is - ";
-        emailService.sendVerificationOtpEmail(email, otp, subject, text);
+        //for stop otp change
+        if(!testingMode){
+            emailService.sendVerificationOtpEmail(email, otp, subject, text);
+        }
     }
 
     @Override

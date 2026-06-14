@@ -1,7 +1,7 @@
 package com.zosh.tests;
 
+import com.zosh.base.BaseTest;
 import com.zosh.pages.LoginPage;
-import com.zosh.pages.SignupPage;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -9,33 +9,17 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+
 @Slf4j
-public class LoginTest {
-    WebDriver driver;
-    LoginPage loginPage;
-
-    @BeforeMethod
-    public void setup() {
-        driver = new ChromeDriver();
-        driver.get("http://localhost:5173/");
-
-        loginPage=new LoginPage(driver);
-    }
-    @Test
-    public void validLoginTest(){
-        loginPage.clickLogin();
-        loginPage.enterEmail("monumonukumar9599@gmail.com");
-        loginPage.clickOtp();
-        loginPage.enterotp();
-        try {
-            loginPage.clickLoginbtn();
+    public class LoginTest extends BaseTest {
+        @BeforeMethod
+        public void setup() {
+            setupBrowser();
         }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        //loginPage.handleToken();
-        loginPage.validateLogin();
-
+     @Test
+    public void loginAvatarLogoutTest() {
+        performLogin();
         loginPage.clickAvtar();
         try {
             loginPage.clickLogout();
@@ -45,8 +29,12 @@ public class LoginTest {
        }
         loginPage.validateLogout();
     }
+
     @AfterMethod
     public void tearDown() {
-        driver.quit();
+
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }

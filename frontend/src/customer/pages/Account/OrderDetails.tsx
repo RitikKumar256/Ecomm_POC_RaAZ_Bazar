@@ -50,7 +50,11 @@ const OrderDetails = () => {
       </section>
 
       <section className='border p-5'>
-        <OrderStepper orderStatus={orders.currentOrder?.orderStatus} />
+        <OrderStepper
+          orderStatus={orders.currentOrder?.orderStatus}
+          orderDate={orders.currentOrder?.orderDate}
+          deliverDate={orders.currentOrder?.deliverDate}
+        />
 
       </section>
       <div className='border p-5'>

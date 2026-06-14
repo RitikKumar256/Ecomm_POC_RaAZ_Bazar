@@ -40,7 +40,12 @@ const OrderItemCard:React.FC<OrderItemCardProps> = ({item,order}) => {
                         {item.product.title}
                     </p>
                     <p><strong>size : </strong>
-                        FREE</p>
+                        FREE
+                    </p>
+
+                    <p><strong>Quantity : </strong>
+                        {item.quantity}
+                    </p>
 
                 </div>
 

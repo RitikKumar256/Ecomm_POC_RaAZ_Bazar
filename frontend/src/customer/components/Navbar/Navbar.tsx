@@ -82,12 +82,12 @@ const Navbar = () => {
               </IconButton>
             )}
 
-            <h1
-              onClick={() => navigate("/")}
-              className="logo cursor-pointer text-lg md:text-2xl text-[#00927c]"
-            >
-              Zosh Bazaar
-            </h1>
+          <h1
+            onClick={() => navigate("/")}
+            className="cursor-pointer text-2xl md:text-4xl font-extrabold tracking-wide text-teal-600"
+          >
+            <span className="italic">RaAz</span> Bazaar
+          </h1>
           </div>
 
           {isLarge && (

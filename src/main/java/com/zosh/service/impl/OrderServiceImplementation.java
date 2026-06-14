@@ -107,7 +107,6 @@ public class OrderServiceImplementation implements OrderService {
 			}
 
 		}
-		
 		return orders;
 		
 	}
@@ -163,15 +162,44 @@ public class OrderServiceImplementation implements OrderService {
 
 	@Override
 	public Order cancelOrder(Long orderId, User user) throws OrderException {
-		Order order=this.findOrderById(orderId);
+
+		Order order = this.findOrderById(orderId);
+
 		if(order.getOrderStatus() == OrderStatus.DELIVERED){
 			throw new OrderException(
 					"Delivered order cannot be cancelled"
 			);
 		}
-		if(user.getId()!=order.getUser().getId()){
-			throw new OrderException("you can't perform this action "+orderId);
+		if(order.getOrderStatus() == OrderStatus.CANCELLED){
+			throw new OrderException(
+					"Order already cancelled"
+			);
 		}
+
+		if(user.getId() != order.getUser().getId()){
+			throw new OrderException(
+					"you can't perform this action " + orderId
+			);
+		}
+
+		// Restore product quantity
+		for(OrderItem item : order.getOrderItems()){
+
+			Product product = item.getProduct();
+
+			int updatedQuantity =
+					product.getQuantity() + item.getQuantity();
+
+			product.setQuantity(updatedQuantity);
+
+			// Product back in stock
+			if(updatedQuantity > 0){
+				product.setIn_stock(true);
+			}
+
+			productRepository.save(product);
+		}
+
 		order.setOrderStatus(OrderStatus.CANCELLED);
 
 		return orderRepository.save(order);

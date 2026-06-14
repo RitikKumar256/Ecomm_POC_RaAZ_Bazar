@@ -65,11 +65,30 @@ const Profile = () => {
 
                 <div className="col-span-1 lg:border-r lg:pr-5 py-5 h-full  flex flex-row flex-wrap lg:flex-col gap-3">
 
-                    {menu.map((item, index) => <div
-                        onClick={() => handleClick(item)}
-                        className={`${menu.length - 1 !== index ? "border-b" : ""} ${item.path == location.pathname ? "bg-primary-color text-white" : ""} px-5 py-3 rounded-md hover:bg-teal-500 hover:text-white cursor-pointer `}>
-                        <p>{item.name}</p>
-                    </div>)}
+                  {menu.map((item, index) => {
+
+                      const isActive = item.path === location.pathname;
+
+                      return (
+                          <div
+                              key={index}
+                              onClick={() => handleClick(item)}
+                              className={`
+                                  px-5 py-3 rounded-xl cursor-pointer
+                                  font-medium text-[16px]
+                                  transition-all duration-300
+                                  border
+
+                                  ${isActive
+                                      ? "bg-teal-600 text-white shadow-lg border-teal-600"
+                                      : "bg-white text-gray-700 border-gray-200 hover:bg-teal-50 hover:text-teal-700 hover:border-teal-400"
+                                  }
+                              `}
+                          >
+                              <p>{item.name}</p>
+                          </div>
+                      )
+                  })}
 
                 </div>
                 <div className='lg:col-span-2 lg:pl-5 py-5'>

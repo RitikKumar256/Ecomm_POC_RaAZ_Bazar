@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.*;
 
@@ -62,8 +63,12 @@ public class Order {
     private int totalItem;
 
     private PaymentStatus paymentStatus=PaymentStatus.PENDING;
-
-    private LocalDateTime orderDate = LocalDateTime.now();
-    private LocalDateTime deliverDate = orderDate.plusDays(7);
+    private LocalDateTime orderDate;
+    private LocalDateTime deliverDate;
+    @PrePersist
+    public void setDates() {
+        this.orderDate = LocalDateTime.now();
+        this.deliverDate = this.orderDate.plusDays(7);
+    }
 
 }
