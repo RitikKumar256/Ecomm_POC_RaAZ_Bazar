@@ -2,21 +2,20 @@ package com.zosh.tests;
 
 import com.zosh.base.BaseTest;
 import com.zosh.pages.ProductPage;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 public class ProductTest extends BaseTest {
     ProductPage productPage;
-    @BeforeMethod
+    @BeforeClass
     public void setup() {
         setupBrowser();
         productPage = new ProductPage(driver);
+        performLogin();
     }
 
-    @Test
+    @Test(priority = 1)
     public void validateProduct() throws InterruptedException {
-        performLogin();
+
 //        productPage.clickIcon();
 //        try {
 //            productPage.clickSareeIcon();
@@ -25,12 +24,12 @@ public class ProductTest extends BaseTest {
 //            e.printStackTrace();
 //        }
         productPage.clicksearchBtn();
-        productPage.enterSearchValue("rsm");
-        scrollDown(300);
+        productPage.enterSearchValue("saree");
+       // scrollDown(300);
         Thread.sleep(4000);
 
     }
-    @AfterMethod
+    @AfterClass
     public void tearDown() {
         driver.quit();
     }

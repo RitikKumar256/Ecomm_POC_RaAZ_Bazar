@@ -21,7 +21,7 @@ public class BaseTest {
     }
     public void performLogin() {
         loginPage.clickLogin();
-        loginPage.enterEmail("monumonukumar9599@gmail.com");
+        loginPage.enterEmail("ritikmonu9599@gmail.com");
        loginPage.clickOtp();
         loginPage.enterotp();
         loginPage.clickLoginbtn();

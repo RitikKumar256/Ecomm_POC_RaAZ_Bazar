@@ -52,7 +52,7 @@ const Home = () => {
                     <h1 className=''>
                         Sell Your Product
                     </h1>
-                    <p className='text-lg md:text-2xl'>With <strong className='logo text-3xl md:text-5xl pl-2'>zosh bazzar</strong></p>
+                    <p className='text-lg md:text-2xl'>With <strong className='logo text-3xl md:text-5xl pl-2'>RaAZ bazzar</strong></p>
 
                     <div className='pt-6 flex justify-center'>
                         <Button
