@@ -23,10 +23,12 @@ public class ProductTest extends BaseTest {
 //        catch (Exception e){
 //            e.printStackTrace();
 //        }
-        productPage.clicksearchBtn();
-        productPage.enterSearchValue("saree");
-       // scrollDown(300);
-        Thread.sleep(4000);
+        productPage.clickmensection();
+        productPage.clickWomensection();
+//        productPage.clicksearchBtn();
+//        productPage.enterSearchValue("saree");
+//       // scrollDown(300);
+//        Thread.sleep(4000);
 
     }
     @AfterClass

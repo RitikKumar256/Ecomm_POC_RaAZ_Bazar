@@ -107,7 +107,8 @@ public class OrderServiceImplementation implements OrderService {
 			}
 
 		}
-		return orders;
+cartService.clearCart(user);
+return orders;
 		
 	}
 

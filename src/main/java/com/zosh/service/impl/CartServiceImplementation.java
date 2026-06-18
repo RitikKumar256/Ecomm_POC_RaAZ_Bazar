@@ -45,6 +45,19 @@ public class CartServiceImplementation implements CartService {
 		
 	}
 
+	@Override
+	public void clearCart(User user) {
+		Cart cart = cartRepository.findByUserId(user.getId());
+		cart.getCartItems().clear();
+		cart.setTotalItem(0);
+		cart.setTotalMrpPrice(0);
+		cart.setTotalSellingPrice(0);
+		cart.setDiscount(0);
+		cart.setCouponCode(null);
+		cart.setCouponPrice(0);
+		cartRepository.save(cart);
+	}
+
 	public static int calculateDiscountPercentage(double mrpPrice, double sellingPrice) {
 		if (mrpPrice <= 0) {
 			return 0;

@@ -77,28 +77,42 @@ const AddressForm:React.FC<AddressFormProp> = ({handleClose,paymentGateway}) => 
             />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              fullWidth
-              name="mobile"
-              label="Mobile"
-              value={formik.values.mobile}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.mobile && Boolean(formik.errors.mobile)}
-              helperText={formik.touched.mobile && formik.errors.mobile}
-            />
+          <TextField
+            fullWidth
+            name="mobile"
+            label="Mobile"
+            value={formik.values.mobile}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, "").slice(0, 10);
+              formik.setFieldValue("mobile", value);
+            }}
+            onBlur={formik.handleBlur}
+            error={formik.touched.mobile && Boolean(formik.errors.mobile)}
+            helperText={formik.touched.mobile && formik.errors.mobile}
+            inputProps={{
+              maxLength: 10,
+              inputMode: "numeric",
+            }}
+          />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              fullWidth
-              name="pinCode"
-              label="Pin Code"
-              value={formik.values.pinCode}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.pinCode && Boolean(formik.errors.pinCode)}
-              helperText={formik.touched.pinCode && formik.errors.pinCode}
-            />
+          <TextField
+            fullWidth
+            name="pinCode"
+            label="Pin Code"
+            value={formik.values.pinCode}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, "").slice(0, 6);
+              formik.setFieldValue("pinCode", value);
+            }}
+            onBlur={formik.handleBlur}
+            error={formik.touched.pinCode && Boolean(formik.errors.pinCode)}
+            helperText={formik.touched.pinCode && formik.errors.pinCode}
+            inputProps={{
+              maxLength: 6,
+              inputMode: "numeric",
+            }}
+          />
           </Grid>
           <Grid item xs={12}>
             <TextField

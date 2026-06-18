@@ -11,6 +11,7 @@ import com.zosh.model.*;
 import com.zosh.repository.PaymentOrderRepository;
 import com.zosh.response.PaymentLinkResponse;
 import com.zosh.service.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,7 @@ public class OrderController {
 	
 	@PostMapping()
 	public ResponseEntity<PaymentLinkResponse> createOrderHandler(
+			@Valid
 			@RequestBody Address spippingAddress,
 			@RequestParam PaymentMethod paymentMethod,
 			@RequestHeader("Authorization")String jwt)
