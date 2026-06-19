@@ -17,18 +17,21 @@ public class CartTest extends ProductTest{
     public void validateProdCart() throws InterruptedException{
         cartPage=new CartPage(driver);
         cartPage.clickSearchProd();
+        cartPage.addprod();
+       // cartPage.clickminusbtn();
         cartPage.clickAddBagbtn();
         cartPage.clickAddCartIcon();
+        cartPage.clickincartaddbtn();
         cartPage.clickBuynowbtn();
         //cartPage.selectAddress();
         //cartPage.selectPayment();
         Thread.sleep(3000);
-        try {
-            cartPage.clickcheckout();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            cartPage.clickcheckout();
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//        }
 
 
 

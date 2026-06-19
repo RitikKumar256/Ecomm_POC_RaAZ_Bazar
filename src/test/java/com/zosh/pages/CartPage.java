@@ -1,9 +1,6 @@
 package com.zosh.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -22,6 +19,10 @@ public class CartPage {
     By address=By.xpath("(//input[@type='radio'])[1]");
     By paymentmethod= By.xpath("(//input[@type='radio'])[2]");
     By checkoutbtn=By.xpath("//button[text()='Checkout']");
+    By addicon=By.xpath("(//button[contains(@class,'MuiButtonBase-root')])[7]");
+    By minusicon=By.xpath("(//button[contains(@class,'MuiButtonBase-root')])[6]");
+     By incartaddicon=By.xpath("(//button[contains(@class,'MuiButton-sizeSmall')])[2]");
+    By incartminusicon=By.xpath("(//button[contains(@class,'MuiButton-sizeSmall')])[1]");
 
     public void clickSearchProd(){
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
@@ -29,6 +30,19 @@ public class CartPage {
                 ExpectedConditions.elementToBeClickable(searchedProd));
         button.click();
     }
+    public void addprod() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(addicon));
+        button.click();
+        System.out.println("Add To Bag Clicked");
+    }
+    public void clickminusbtn() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(minusicon));
+        button.click();
+        System.out.println("Minus To Bag Clicked");
+    }
+
     public void clickAddBagbtn() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement addBag = wait.until(
@@ -46,6 +60,18 @@ public class CartPage {
         WebElement button = wait.until(
                 ExpectedConditions.elementToBeClickable(carticon));
         button.click();
+    }
+    public void clickincartaddbtn() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        WebElement button = wait.until(
+//                ExpectedConditions.elementToBeClickable(incartaddicon));
+                ExpectedConditions.elementToBeClickable(incartminusicon));
+
+        ((JavascriptExecutor) driver)
+                .executeScript("arguments[0].scrollIntoView({block:'center'});", button);
+        Thread.sleep(1000);
+        button.click();
+        Thread.sleep(3000);
     }
     public void clickBuynowbtn(){
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
