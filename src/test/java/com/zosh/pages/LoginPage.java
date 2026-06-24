@@ -26,12 +26,9 @@ public class LoginPage {
         driver.findElement(loginbtn).click();
     }
     public void enterEmail(String email) {
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-
         WebElement emailField = wait.until(
                 ExpectedConditions.visibilityOfElementLocated(emailtext));
-
         emailField.sendKeys(email);
     }
     public void clickOtp() {

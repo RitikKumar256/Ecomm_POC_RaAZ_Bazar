@@ -23,7 +23,16 @@ public class CartPage {
     By minusicon=By.xpath("(//button[contains(@class,'MuiButtonBase-root')])[6]");
      By incartaddicon=By.xpath("(//button[contains(@class,'MuiButton-sizeSmall')])[2]");
     By incartminusicon=By.xpath("(//button[contains(@class,'MuiButton-sizeSmall')])[1]");
-
+    By deleteprodCart=By.xpath("//button[.//*[name()='svg' and @data-testid='CloseIcon']]");
+    By addaddress=By.xpath("(//button[text()='Add New Address'])[1]");
+    By contname=By.xpath("//input[@name='name']");
+    By contmobile=By.xpath("//input[@name='mobile']");
+    By contpincode=By.xpath("//input[@name='pinCode']");
+    By contaddress=By.xpath("//input[@name='address']");
+    By contlocality=By.xpath("//input[@name='locality']");
+    By contcity=By.xpath("//input[@name='city']");
+    By contstate=By.xpath("//input[@name='state']");
+    By contaddbtn=By.xpath("//button[text()='Add Address']");
     public void clickSearchProd(){
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         WebElement button = wait.until(
@@ -61,12 +70,20 @@ public class CartPage {
                 ExpectedConditions.elementToBeClickable(carticon));
         button.click();
     }
+    public void clickdeleteprodcart() {
+        WebElement button = new WebDriverWait(driver, Duration.ofSeconds(20))
+                .until(ExpectedConditions.elementToBeClickable(deleteprodCart));
+        try {
+            button.click();
+        } catch (ElementClickInterceptedException e) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", button);
+        }
+    }
     public void clickincartaddbtn() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         WebElement button = wait.until(
 //                ExpectedConditions.elementToBeClickable(incartaddicon));
                 ExpectedConditions.elementToBeClickable(incartminusicon));
-
         ((JavascriptExecutor) driver)
                 .executeScript("arguments[0].scrollIntoView({block:'center'});", button);
         Thread.sleep(1000);
@@ -78,6 +95,36 @@ public class CartPage {
         WebElement button = wait.until(
                 ExpectedConditions.elementToBeClickable(buynowbtn));
         button.click();
+    }
+    public void clickaddAddressbtn() {
+        WebElement button = new WebDriverWait(driver, Duration.ofSeconds(20))
+                .until(ExpectedConditions.presenceOfElementLocated(addaddress));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", button);
+    }
+    public void enterContactDetail(String name,String mob,String pincode,String address,
+                                   String locality,String city,String state) throws InterruptedException{
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebElement nameField = wait.until(ExpectedConditions.visibilityOfElementLocated(contname));
+        WebElement mobileField = wait.until(ExpectedConditions.visibilityOfElementLocated(contmobile));
+        WebElement pincodeField = wait.until(ExpectedConditions.visibilityOfElementLocated(contpincode));
+        WebElement addressField = wait.until(ExpectedConditions.visibilityOfElementLocated(contaddress));
+        WebElement localityField = wait.until(ExpectedConditions.visibilityOfElementLocated(contlocality));
+        WebElement cityField = wait.until(ExpectedConditions.visibilityOfElementLocated(contcity));
+        WebElement stateField = wait.until(ExpectedConditions.visibilityOfElementLocated(contstate));
+        nameField.sendKeys(name);
+        mobileField.sendKeys(mob);
+        pincodeField.sendKeys(pincode);
+        addressField.sendKeys(address);
+        localityField.sendKeys(locality);
+        cityField.sendKeys(city);
+        stateField.sendKeys(state);
+        WebElement button = wait.until(
+                ExpectedConditions.elementToBeClickable(contaddbtn));
+        button.click();
+        Thread.sleep(3000);
+
+
+
     }
     public void selectAddress(){
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));

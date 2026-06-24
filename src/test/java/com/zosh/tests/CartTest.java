@@ -21,8 +21,12 @@ public class CartTest extends ProductTest{
        // cartPage.clickminusbtn();
         cartPage.clickAddBagbtn();
         cartPage.clickAddCartIcon();
-        cartPage.clickincartaddbtn();
-        cartPage.clickBuynowbtn();
+        cartPage.clickdeleteprodcart();
+       // cartPage.clickincartaddbtn();
+       // cartPage.clickBuynowbtn();
+       // cartPage.clickaddAddressbtn();
+       // cartPage.enterContactDetail("Ritik","95487183","2013","E26 vishbaspark",
+               // "uttamnagar","new delhi","delhi");
         //cartPage.selectAddress();
         //cartPage.selectPayment();
         Thread.sleep(3000);
