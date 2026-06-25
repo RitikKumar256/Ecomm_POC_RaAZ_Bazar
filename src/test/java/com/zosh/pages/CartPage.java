@@ -33,6 +33,14 @@ public class CartPage {
     By contcity=By.xpath("//input[@name='city']");
     By contstate=By.xpath("//input[@name='state']");
     By contaddbtn=By.xpath("//button[text()='Add Address']");
+    By paymob=By.xpath("//input[@name='contact']");
+    By paycontiuebtn=By.xpath("//button[text()='Continue']");
+    By card=By.xpath("//div[@data-testid='card']");
+    By cardnumber=By.xpath("//input[@name='card.number']");
+    By cardexpire=By.xpath("//input[@name='card.expiry']");
+    By cvv=By.xpath("//input[@name='card.cvv']");
+    By finalpaycont=By.xpath("//button[@data-testid='bottom-cta-button']");
+
     public void clickSearchProd(){
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         WebElement button = wait.until(
@@ -148,5 +156,45 @@ public class CartPage {
         button.click();
         Thread.sleep(7000);
 
+    }
+
+    public void enterMobileAndSelectCard(String mobileNumber) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+
+        // Switch to Razorpay iframe
+        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(
+                By.cssSelector("iframe[src*='razorpay']")
+        ));
+        // Enter mobile number
+        WebElement mobile = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(paymob));
+        mobile.clear();
+        mobile.sendKeys(mobileNumber);
+        // Wait until Card option is visible and click it
+        WebElement cardOption = wait.until(
+                ExpectedConditions.elementToBeClickable(card));
+        cardOption.click();
+        System.out.println("Card payment selected.");
+    }
+    public void enterCardDetails(String cardNo, String expiry, String cvvNo)
+            throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(cardnumber))
+                .sendKeys(cardNo);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(cardexpire))
+                .sendKeys(expiry);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(cvv))
+                .sendKeys(cvvNo);
+        wait.until(ExpectedConditions.elementToBeClickable(finalpaycont))
+                .click();
+        System.out.println("========================================");
+        System.out.println("Please enter the 6-digit OTP manually...");
+        System.out.println("Automation is waiting...");
+        System.out.println("========================================");
+        // Give enough time to enter OTP manually
+        Thread.sleep(30000);   // 30 seconds
+        // Switch back to the main page after payment
+        driver.switchTo().defaultContent();
+        System.out.println("OTP wait completed.");
     }
 }
