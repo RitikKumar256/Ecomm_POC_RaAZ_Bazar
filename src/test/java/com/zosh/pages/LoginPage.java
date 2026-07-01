@@ -21,6 +21,7 @@ public class LoginPage {
     By avtar=By.xpath("//img[contains(@class,'MuiAvatar-img')]");
     By profileBtn = By.xpath("//button[.//img[contains(@class,'MuiAvatar-img')]]");
     By logoutbtn=By.xpath("//p[text()='Logout']");
+    By orderdetil=By.xpath("//p[text()='new kurta']/ancestor::div[contains(@class,'cursor-pointer')]");
     //By alert=By.xpath("//div[text()=' otp sent to your email!']");
     public void clickLogin() {
         driver.findElement(loginbtn).click();
@@ -66,13 +67,21 @@ public class LoginPage {
         button.click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(profileBtn));
     }
-    public void clickAvtar(){
+    public void clickAvtar() throws InterruptedException{
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement button = wait.until(
                 ExpectedConditions.elementToBeClickable(profileBtn));
-        button.click();
+               button.click();
         System.out.println(button.isDisplayed());
         System.out.println(button.isEnabled());
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        for (int i = 0; i < 20; i++) {
+            js.executeScript("window.scrollBy(0, 200);");
+            Thread.sleep(500);
+        }
+        WebElement orderbtn=wait.until(ExpectedConditions.elementToBeClickable(orderdetil));
+        orderbtn.click();
+        Thread.sleep(5000);
     }
     public void clickLogout() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
